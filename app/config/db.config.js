@@ -10,6 +10,12 @@ const pool = mysql.createPool({
     port: process.env.DB_PORT
 });
 
+//create database
+pool.query("CREATE DATABASE IF NOT EXISTS pokemondb", function (err, result) {
+    if (err) throw err;
+    console.log("Database created");
+});
+
 //create trainers table
 pool.query('CREATE TABLE IF NOT EXISTS `trainers` (' +
     'id BIGINT NOT NULL AUTO_INCREMENT,' +
