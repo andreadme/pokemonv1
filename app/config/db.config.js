@@ -64,7 +64,7 @@ pool.query('CREATE TABLE IF NOT EXISTS `pokemons` (' +
 	'updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,' +
 	'PRIMARY KEY (`id`),' +
     'UNIQUE KEY `uni_name` (`name`, `trainer_id`),' +
-    'FOREIGN KEY (trainer_id) references trainers(id))', function (err, result) {
+    'FOREIGN KEY (trainer_id) references trainers(id))', function (err, result) { 
         if (err) throw console.log(err);
         console.log("pokemons table created");
     }
@@ -78,13 +78,18 @@ pool.query('CREATE TABLE IF NOT EXISTS slots (' +
     'pokemon_id BIGINT NOT NULL,' +
     'order_no INT NOT NULL,' +
     'slot_no INT NOT NULL,' +
+    'total_attack_stat INT NOT NULL,' +
+    'total_defense_stat INT NOT NULL,' +
+    'total_speed_stat INT NOT NULL,' +
+    'total_per_slot BIGINT NOT NULL,' +
+    'total_overall BIGINT NOT NULL,' +
 	'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,' +
 	'updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,' +
 	'PRIMARY KEY (`id`),' +
     'UNIQUE KEY `uni_slot` (`trainer_id`, `league_id`, `slot_no`, `order_no`),' +
     'FOREIGN KEY (trainer_id) references trainers(id),' +
     'FOREIGN KEY (league_id) references leagues(id))', function (err, result) {
-        if (err) throw err;
+    if (err) throw err;
         console.log("slots table created");
     }
 );

@@ -9,19 +9,46 @@ exports.create = async (req, res, next) => {
         const leagueId = JSON.parse(req.body.leagueId);
         let firstSlot = req.body.firstSlotData;
         let secondSlot = req.body.secondSlotData;
+        let attackStatRecords = req.body.attackStatRecords;
+        let defenseStatRecords = req.body.defenseStatRecords;
+        let speedStatRecords = req.body.speedStatRecords;
+        let totalOverall = req.body.totalOverall;
+
+        console.log(totalOverall)
 
         // first slots
         firstSlot = firstSlot.replace(/'/g, '"');
+        attackStatRecords = attackStatRecords.replace(/'/g, '"');
+        defenseStatRecords = defenseStatRecords.replace(/'/g, '"');
+        speedStatRecords = speedStatRecords.replace(/'/g, '"');
+
         let firstSlotArr = JSON.parse(firstSlot);
+        let attackStatRecordsArr = JSON.parse(attackStatRecords);
+        let defenseStatRecordsArr = JSON.parse(defenseStatRecords);
+        let speedStatRecordsArr = JSON.parse(speedStatRecords);
+        // console.log(attackStatRecordsArr);
+        // console.log(defenseStatRecordsArr);
         for (let i = 0; i < firstSlotArr.length; i++) {
-            await Slot.create({
+            Slot.create({
                 trainer_id: trainerId,
                 league_id: leagueId,
                 pokemon_id: firstSlotArr[i].pokemonId,
                 slot_no: firstSlotArr[i].slotNo,
                 order_no: firstSlotArr[i].orderNo,
+                total_attack_stat: attackStatRecordsArr[i],
+                total_defense_stat: defenseStatRecordsArr[i],
+                total_speed_stat: speedStatRecordsArr[i],
+                total_per_slot: attackStatRecordsArr[i] + defenseStatRecordsArr[i] + speedStatRecordsArr[i],
+                total_overall: totalOverall
             });
         }
+
+        // console.log(attackStatRecordsArr)
+        // console.log(defenseStatRecordsArr)
+
+        let attackStatRecordsArr2 = JSON.parse(attackStatRecords);
+        let defenseStatRecordsArr2 = JSON.parse(defenseStatRecords);
+        let speedStatRecordsArr2 = JSON.parse(speedStatRecords);
 
         // second slots
         secondSlot = secondSlot.replace(/'/g, '"');
@@ -33,6 +60,11 @@ exports.create = async (req, res, next) => {
                 pokemon_id: secondSlotArr[i].pokemonId,
                 slot_no: secondSlotArr[i].slotNo,
                 order_no: secondSlotArr[i].orderNo,
+                total_attack_stat: attackStatRecordsArr2[i],
+                total_defense_stat: defenseStatRecordsArr2[i],
+                total_speed_stat: speedStatRecordsArr2[i],
+                total_per_slot: attackStatRecordsArr[i] + defenseStatRecordsArr[i] + speedStatRecordsArr[i],
+                total_overall: totalOverall
             });
         }
 
@@ -68,15 +100,20 @@ exports.getTrainerSlots = async (req, res, next) => {
                     let pokemon = await Pokemon.get(req.slots[index].pokemon_id);
                     let allSlots = {};
                     if (req.slots[index].order_no === 1) {
-                        allSlots["firstPokemon"] = { 'leagueId': req.slots[index].league_id, 'slotNo': req.slots[index].slot_no, 'pokemonName': pokemon[0].name, 'orderNo': req.slots[index].order_no }
+                        allSlots["firstPokemon"] = { 'leagueId': req.slots[index].league_id, 'slotNo': req.slots[index].slot_no, 'pokemonName': pokemon[0].name, 'orderNo': req.slots[index].order_no, 'totalAttackStat': req.slots[index].total_attack_stat, 'totalDefenseStat': req.slots[index].total_defense_stat, 'totalSpeedStat': req.slots[index].total_speed_stat, 'totalPerSlot': req.slots[index].total_per_slot, 'totalOverall': req.slots[index].total_overall }
 
                         if (req.slots[index+1].slot_no === req.slots[index].slot_no && parseInt(req.slots[index+1].order_no) === 2 && req.slots[index+1].pokemon_id !== 0 && leagueNames[i].title === league[0].title) {
                             let pokemon = await Pokemon.get(req.slots[index+1].pokemon_id);
-                            allSlots.secondPokemon = { 'leagueId': req.slots[index+1].league_id, 'slotNo': req.slots[index].slot_no, 'pokemonName': pokemon[0].name, 'orderNo': req.slots[index+1].order_no }
+                            allSlots.secondPokemon = { 'leagueId': req.slots[index+1].league_id, 'slotNo': req.slots[index].slot_no, 'pokemonName': pokemon[0].name, 'orderNo': req.slots[index+1].order_no, 'totalAttackStat': req.slots[index+1].total_attack_stat, 'totalDefenseStat': req.slots[index+1].total_defense_stat, 'totalSpeedStat': req.slots[index+1].total_speed_stat, 'totalPerSlot': req.slots[index+1].total_per_slot, 'totalOverall': req.slots[index+1].total_overall }
                             ++index;
                         }
                         slotsArr.push(allSlots)
+                    } else if (parseInt(req.slots[index].order_no) === 2 && req.slots[index].order_no === 2) {
+                        let pokemon = await Pokemon.get(req.slots[index].pokemon_id);
+                        allSlots.secondPokemon = { 'leagueId': req.slots[index].league_id, 'slotNo': req.slots[index].slot_no, 'pokemonName': pokemon[0].name, 'orderNo': req.slots[index].order_no, 'totalAttackStat': req.slots[index].total_attack_stat, 'totalDefenseStat': req.slots[index].total_defense_stat, 'totalSpeedStat': req.slots[index].total_speed_stat, 'totalPerSlot': req.slots[index].total_per_slot, 'totalOverall': req.slots[index].total_overall }
+                        slotsArr.push(allSlots)
                     }
+
                 }
                 index++;
             }
