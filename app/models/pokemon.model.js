@@ -46,7 +46,7 @@ Pokemon.getAll = (values, result) => {
 
 Pokemon.trainerPokemons= (id) => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT * FROM pokemons WHERE trainer_id = ?', [id], (error, elements) => {
+        pool.query('SELECT * FROM pokemons WHERE trainer_id = ?', id, (error, elements) => {
             if (error) {
                 return reject(error);
             }

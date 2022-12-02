@@ -11,7 +11,6 @@ exports.create = async (req, res, next) => {
             data: resultElements,
         });
     } catch(e) {
-        console.log(e);
         return res.status(500).json({
             success: false,
             message: (e.code == 'ER_DUP_ENTRY' || e.errno == 1062) ? "The pokemon name has already been taken." : "An error occurred in the server."
@@ -28,7 +27,6 @@ exports.get = async (req, res, next) => {
             data: resultElements,
         });
     } catch(e) {
-        console.log(e);
         return res.status(500).json({
             success: false,
             message: "An error occurred in the server."
@@ -45,7 +43,6 @@ exports.getAll = async (req, res, next) => {
             data: resultElements,
         });
     } catch(e) {
-        console.log(e);
         return res.status(500).json({
             success: false,
             message: "An error occurred in the server."
@@ -55,10 +52,19 @@ exports.getAll = async (req, res, next) => {
 
 // retrieve a league with its slots
 exports.getTrainerPokemons = async (req, res, next) => {
-    res.status(200).json({
-        success: true,
-        pokemons: req.pokemons
-    });
+    try {
+        const resultElements = await Pokemon.trainerPokemons(req.params.trainerId);
+        res.status(200).json({
+            success: true,
+            message: "All pokemons have been retrieved successfully.",
+            data: resultElements,
+        });
+    } catch(e) {
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred in the server."
+        });
+    }
 }
 
 
