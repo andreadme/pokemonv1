@@ -81,7 +81,7 @@ exports.getTrainerSlots = async (req, res, next) => {
                 index++;
             }
 
-            leagueObj.push({'leagueName': leagueNames[i].title, 'startDate': leagueNames[i].start_date, 'slots': slotsArr})
+            leagueObj.push({'leagueId': leagueNames[i].id, 'leagueName': leagueNames[i].title, 'startDate': leagueNames[i].start_date, 'slots': slotsArr})
         }
 
         res.status(200).json({
