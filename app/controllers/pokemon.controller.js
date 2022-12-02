@@ -13,7 +13,7 @@ exports.create = async (req, res, next) => {
     } catch(e) {
         return res.status(500).json({
             success: false,
-            message: (e.code == 'ER_DUP_ENTRY' || e.errno == 1062) ? "The pokemon name has already been taken." : "An error occurred in the server."
+            message: (e.code == 'ER_DUP_ENTRY' || e.errno == 1062) ? "You have already added this pokemon." : "An error occurred in the server."
         });
     }
 }

@@ -57,7 +57,7 @@ pool.query('CREATE TABLE IF NOT EXISTS `pokemons` (' +
 	'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,' +
 	'updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,' +
 	'PRIMARY KEY (`id`),' +
-    'UNIQUE KEY `uni_name` (`name`),' +
+    'UNIQUE KEY `uni_name` (`name`, `trainer_id`),' +
     'FOREIGN KEY (trainer_id) references trainers(id))', function (err, result) {
         if (err) throw console.log(err);
         console.log("pokemons table created");
